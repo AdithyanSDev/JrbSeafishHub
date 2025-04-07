@@ -1,131 +1,160 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import pepper_powder from "../assets/img/Pepper_powder.jpg";
-import turmeric_powder from "../assets/img/Turmeric_powder.jpg";
-import chilli_powder from "../assets/img/chilli_powder.jpg";
-import chicken_masala from "../assets/img/Chicken_masala.jpg";
-import coconut_oil from "../assets/img/Coconut_oil.webp";
-import Fish_masala from "../assets/img/fish masala.jpg";
-import Pathiri_Powder from "../assets/img/pathiri_podi.jpg";
-import Atta_Powder from "../assets/img/chappathi powder.webp";
-import Ragi_Powder from "../assets/img/ragi powder.jpg";
-import Coriander_Powder from "../assets/img/coriander_powder.webp";
-import Jeera_Powder from "../assets/img/jeera powder.webp";
-import Garam_Masala from "../assets/img/garam masala.jpg";
-import Sambar_Powder from "../assets/img/sambar powder.jpg";
-import Garlic_Powder from "../assets/img/garlic powder.jpg";
-import Ginger_Powder from "../assets/img/Ginger powder.webp";
+import spices_img from "../assets/img/spices.jpeg";
 
-const products = [
-  { name: "Pepper Powder", image: pepper_powder, category: "Spices" },
-  { name: "Turmeric Powder", image: turmeric_powder, category: "Spices" },
-  { name: "Chilli Powder", image: chilli_powder, category: "Spices" },
-  { name: "Chicken Masala", image: chicken_masala, category: "Instant Mix" },
-  { name: "Coconut oil", image: coconut_oil, category: "Coconut" },
-  { name: "Fish Masala", image: Fish_masala, category: "Instant Mix" },
-  { name: "Pathiri Powder", image: Pathiri_Powder, category: "Rice Powder" },
-  { name: "Chappathi Powder", image: Atta_Powder, category: "Rice Powder" },
-  { name: "Ragi Powder", image: Ragi_Powder, category: "Rice Powder" },
-  { name: "Coriander Powder", image: Coriander_Powder, category: "Spices" },
-  { name: "Jeera Powder", image: Jeera_Powder, category: "Spices" },
-  { name: "Garam Masala", image: Garam_Masala, category: "Instant Mix" },
-  { name: "Sambar Powder", image: Sambar_Powder, category: "Instant Mix" },
-  { name: "Garlic Powder", image: Garlic_Powder, category: "Spices" },
-  { name: "Ginger Powder", image: Ginger_Powder, category: "Spices" },
-];
+interface ProductCategory {
+  _id: string;
+  name: string;
+  image: string;
+}
 
-const categoryCounts: Record<string, number> = products.reduce((acc, product) => {
-  acc[product.category] = (acc[product.category] || 0) + 1;
-  return acc;
-}, {} as Record<string, number>);
+interface Product {
+  _id: string;
+  name: string;
+  image: string;
+  price: number;
+  category: ProductCategory;
+}
 
-const categories = ["All", ...Object.keys(categoryCounts)];
 
 const ProductsPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 6;
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
+console.log(products)
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/categories`)
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.error("Error fetching categories:", err));
 
-  const filteredProducts = products.filter(
-    (product) =>
-      (selectedCategory === "All" || product.category === selectedCategory) &&
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + productsPerPage);
+    fetch(`${import.meta.env.VITE_API_URL}/products`)
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((err) => console.error("Error fetching products:", err));
+  }, []);
 
   return (
     <>
       <Navbar />
       <div className="container-fluid page-header py-5 bg-secondary">
-        <h1 className="text-center text-white display-6">Shop</h1>
+        <h1 className="text-center text-white display-6">Products</h1>
       </div>
+
       <div className="container py-5">
-        <h1 className="text-center mb-4">Our Organic Products</h1>
+        <h1 className="text-center mb-4">All Seafood Fresh</h1>
+        
+        <div className="input-group mb-5">
+          <span className="input-group-text">
+            <i className="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search for fish..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
 
-        <div className="row">
-          <div className="col-lg-3">
-            <h4>Categories</h4>
-            <ul className="list-group">
-              {categories.map((category) => (
-                <li
-                  key={category}
-                  className={`list-group-item ${selectedCategory === category ? "active" : ""}`}
-                  onClick={() => { setSelectedCategory(category); setCurrentPage(1); }}
-                  style={{ cursor: "pointer" }}
-                >
-                  {category} ({categoryCounts[category] || products.length})
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="col-lg-9">
-            <input
-              type="text"
-              className="form-control mb-3"
-              placeholder="Search products..."
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-            />
-
-            <div className="row g-4">
-              {paginatedProducts.map((product) => (
-                <div key={product.name} className="col-md-4">
-                  <div className="card border-0 shadow-sm">
-                    <img src={product.image} className="card-img-top" alt={product.name} />
-                    <div className="card-body text-center">
-                      <h5 className="card-title">{product.name}</h5>
-                      <p className="text-muted">{product.category}</p>
-                    </div>
+        <div className="row mb-5 d-flex justify-content-center">
+          {categories.map((category) => (
+            <div key={category._id} className="col-lg-3 col-md-6 mb-4">
+              <div className="p-4 rounded border border-secondary category-card">
+                <div className="row align-items-center">
+                  <div className="col-6 d-flex justify-content-center">
+                    <img
+                      src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${category.image}`}
+                      className="img-fluid rounded-circle"
+                      alt={category.name}
+                      style={{ width: "120px", height: "120px", objectFit: "cover" }}
+                    />
+                  </div>
+                  <div className="col-6 text-center">
+                    <h5>{category.name}</h5>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-
-            <div className="d-flex justify-content-center mt-4">
-              <button
-                className="btn btn-primary me-2"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Previous
-              </button>
-              <span className="align-self-center">Page {currentPage} of {totalPages}</span>
-              <button
-                className="btn btn-primary ms-2"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Next
-              </button>
+          ))}
+           {/* Spices (Disabled) */}
+           <div className="col-lg-3 col-md-6 mb-4">
+            <div className="p-4 rounded bg-light border border-secondary opacity-50 position-relative">
+              <span className="position-absolute top-0 start-50 translate-middle badge bg-danger text-white">
+                Coming Soon
+              </span>
+              <div className="row align-items-center">
+                <div className="col-6 d-flex justify-content-center">
+                  <img
+                    src={spices_img}
+                    className="img-fluid rounded-circle"
+                    alt="Spices"
+                    style={{
+                      width: "120px",
+                      height: "120px",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+                <div className="col-6 text-center">
+                  <h5 className="text-muted">Spices</h5>
+                  <button
+                    className="btn border border-secondary rounded-pill px-3 text-muted"
+                    disabled
+                  >
+                    Coming Soon
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+        {categories.map((category) => {
+        const filteredProducts = products.filter(
+          (product) =>
+            product.category._id === category._id && // Matching category ID instead of name
+            product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        
+        
+          return (
+            <div key={category._id} className="mb-5">
+              <h1 className="text-center text-primary border-bottom pb-2 fw-bold mb-5">
+                {category.name}
+              </h1>
+              <div className="row g-4">
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
+                    <div key={product._id} className="col-md-6 col-lg-4">
+                      <div className="card border border-secondary shadow-sm position-relative">
+                        <div 
+                          className="position-absolute top-0 end-0 bg-secondary text-white px-2 py-1 rounded-bottom-start"
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                        >
+                          500g
+                        </div>
+                        <img
+                           src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${product.image}`}
+                          className="card-img-top"
+                          alt={product.name}
+                          style={{ height: "200px", objectFit: "cover" }}
+                        />
+                        <div className="card-body text-center">
+                          <h5 className="card-title">{product.name}</h5>
+                          <h3 className="text-primary fw-bold">₹{product.price}</h3>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-muted">No products available</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
       <Footer />
     </>

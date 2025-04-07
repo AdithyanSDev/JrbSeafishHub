@@ -1,19 +1,29 @@
 import React from "react";
-import spices from "../assets/img/spices.jpeg"; // Correct import
-import cocunut_oil from "../assets/img/Coconut_oil.webp"; // Correct import
+import banner from "../assets/img/banner.webp"; // Correct import
+import seafood_banner from "../assets/img/seafood-banner.jpg"; // Correct import
+import seafood from "../assets/img/seafood.jpg"; // Correct import
 
 const Hero: React.FC = () => {
   return (
     <div className="container-fluid py-5 mb-5 hero-header">
       <div className="container py-5">
         <div className="row g-5 align-items-center">
-          <div className="col-md-12 col-lg-7">
-            <h4 className="mb-3 text-secondary">100% Organic Spices</h4>
-            <h1 className="mb-5 display-3 text-primary">
-              Authentic Spices and Organic Essentials
+          {/* Text Section */}
+          <div className="col-md-12 col-lg-6">
+            <h4 className="mb-3" style={{ color: "#0077b6" }}>Fresh from the Ocean</h4>
+            <h1 className="mb-4 display-3 text-dark">
+              Premium Fresh Seafood
             </h1>
+            <p className="mb-5 text-muted">
+              Sourced directly from the Malabar coast, our seafood is fresh, cleaned, and ready to cook.  
+            </p>
+            <a href="/products" className="btn btn-lg text-white px-4 py-2" style={{ backgroundColor: "#0077b6", borderRadius: "8px" }}>
+              Explore Products
+            </a>
           </div>
-          <div className="col-md-12 col-lg-5">
+
+          {/* Carousel Section - Increased Size */}
+          <div className="col-md-12 col-lg-6">
             <div
               id="carouselId"
               className="carousel slide position-relative"
@@ -22,33 +32,42 @@ const Hero: React.FC = () => {
               <div className="carousel-inner" role="listbox">
                 <div className="carousel-item active rounded">
                   <img
-                    src={spices}
+                    src={seafood}
                     className="img-fluid w-100 bg-secondary rounded"
                     alt="First slide"
                     style={{
-                      height: "400px",
+                      height: "450px", // Increased height
                       objectFit: "cover",
                       borderRadius: "10px",
                     }}
                   />
                   <a href="#" className="btn px-4 py-2 text-white rounded">
-                    Spices
+                    Seafood
                   </a>
                 </div>
                 <div className="carousel-item rounded">
                   <img
-                    src={cocunut_oil}
+                    src={seafood_banner}
                     className="img-fluid w-100 rounded"
                     alt="Second slide"
                     style={{
-                      height: "400px",
+                      height: "450px", // Increased height
                       objectFit: "cover",
                       borderRadius: "10px",
                     }}
                   />
-                  <a href="#" className="btn px-4 py-2 text-white rounded">
-                    Coconut Oil
-                  </a>
+                </div>
+                <div className="carousel-item rounded">
+                  <img
+                    src={banner}
+                    className="img-fluid w-100 rounded"
+                    alt="Third slide"
+                    style={{
+                      height: "450px", // Increased height
+                      objectFit: "cover",
+                      borderRadius: "10px",
+                    }}
+                  />
                 </div>
               </div>
               <button

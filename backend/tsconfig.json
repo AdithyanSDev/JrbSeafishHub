@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                           // Ensures modern JavaScript features
+    "module": "CommonJS",                      // Uses Node.js module system
+    "rootDir": "./src",                        // Source files directory
+    "outDir": "./dist",                        // Compiled files directory
+    "moduleResolution": "Node",                // Uses Node.js module resolution
+    "resolveJsonModule": true,                 // Allows importing JSON files
+    "esModuleInterop": true,                   // Enables ES module compatibility
+    "forceConsistentCasingInFileNames": true,  // Prevents casing inconsistencies
+    "strict": true,                            // Enables strict type-checking
+    "skipLibCheck": true                        // Skips type checking of libraries
+  },
+  "include": ["src"],                          // Includes only the src folder
+  "exclude": ["node_modules", "dist"]          // Excludes unnecessary folders
+}

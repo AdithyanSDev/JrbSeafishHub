@@ -1,7 +1,7 @@
 import React from "react";
-import feature1 from "../assets/img/spices_transparent.jpg";
-import feature2 from "../assets/img/cocunut_oil_transparent.jpg";
-import feature3 from "../assets/img/fresh_fishes_sliced.webp";
+import freshWater from "../assets/img/freshwater.webp"; // Replace with actual image
+import seaFish from "../assets/img/mackerel.png"; // Replace with actual image
+import shellfish from "../assets/img/crab.jpg"; // Replace with actual image
 
 // Reusable Service Item Component
 const ServiceItem: React.FC<{
@@ -44,24 +44,24 @@ const ServiceItem: React.FC<{
 const ServiceSection: React.FC = () => {
   const services = [
     {
-      image: feature1,
-      bgColor: "bg-secondary",
-      borderColor: "border-secondary",
-      title: "Organic Spices",
-      textColor: "bg-primary text-white",
+      image: freshWater,
+      bgColor: "bg-primary",
+      borderColor: "border-primary",
+      title: "Fresh Water Fish",
+      textColor: "bg-light text-dark",
     },
     {
-      image: feature2,
+      image: seaFish,
       bgColor: "bg-dark",
       borderColor: "border-dark",
-      title: "Coconut Oil",
-      textColor: "bg-light text-dark", // Changed to dark text color
+      title: "Seafish",
+      textColor: "bg-light text-dark",
     },
     {
-      image: feature3,
+      image: shellfish  ,
       bgColor: "bg-info",
       borderColor: "border-info",
-      title: "Fresh Fishes",
+      title: "Shell Fishes",
       textColor: "bg-secondary text-white",
     },
   ];

@@ -3,26 +3,29 @@ import React from "react";
 const Features: React.FC = () => {
   const featureData = [
     { 
+      icon: "fas fa-fish", 
+      title: "Fresh Catch", 
+      desc: "Fresh and tasty fishes directly from the harbor." 
+    },
+    { 
       icon: "fas fa-shipping-fast", 
-      title: "Fast & Reliable Delivery", 
+      title: "Fast Home Delivery", 
       desc: "Get your order delivered to your doorstep quickly and efficiently." 
     },
     { 
-      icon: "fas fa-seedling", 
-      title: "Homemade Spices", 
-      desc: "Pure homemade organic spices – flavorful, and free from additives." 
+      icon: "fas fa-cut", 
+      title: "Cleaned & Ready", 
+      desc: "Cleaned and cut/sliced options available for convenience." 
     },
+    
     { 
-      icon: "fas fa-check-circle", 
-      title: "Guaranteed Quality", 
-      desc: "Visit our store to check the quality of our products yourself." 
+      icon: "fas fa-water", 
+      title: "Wide Variety", 
+      desc: "Seafood, shellfish, and freshwater fish available." 
     },
-    { 
-      icon: "fas fa-headset", 
-      title: "24/7 Customer Support", 
-      desc: "Round-the-clock support for customer queries." 
-    },
-  ];
+   
+];
+
 
   return (
     <div className="container-fluid featurs py-5">

@@ -6,19 +6,22 @@ import Features from "../components/Features";
 import ProductCard from "../components/ProductCard";
 import ServiceSection from "../components/Services";
 import Banner from "../components/Banner";
-import BestsellerProducts from "../components/BestSeller";
+import WhatsAppButton from "../components/WhatsappButton";
+import OnlineBanner from "../components/OnlineBanner";
 
 const Home: React.FC = () => {
   return (
     <>
       <Navbar />
+    
       <Hero />
+     
       <Features />
+      <OnlineBanner/>
       <ProductCard />
       <ServiceSection />
-
+      <WhatsAppButton/>
       <Banner />
-      <BestsellerProducts />
       <Footer />
     </>
   );
