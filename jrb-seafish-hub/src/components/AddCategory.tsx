@@ -13,30 +13,44 @@ const AddCategory = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
+  
+    if (!name || !image) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+  
     try {
+      // Check if category with the same name exists
+      const existing = await axios.get(`${import.meta.env.VITE_API_URL}/categories`);
+      const isDuplicate = existing.data.some(
+        (category: any) => category.name.toLowerCase().trim() === name.toLowerCase().trim()
+      );
+  
+      if (isDuplicate) {
+        setError("Category with this name already exists.");
+        return;
+      }
+  
       const formData = new FormData();
       formData.append("name", name);
-      console.log((`${import.meta.env.VITE_API_URL}`))
-      if (image) formData.append("image", image); // Append Image
-
+      if (image) formData.append("image", image);
+  
       await axios.post(`${import.meta.env.VITE_API_URL}/categories`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      
-
+  
       navigate("/admin/categories");
     } catch (err) {
       setError("Error adding category. Please try again.");
     }
   };
-
+  
   return (
     <div className="admin-container">
       {/* Admin Navbar */}
       <AdminNavbar />
 
-      <div className="admin-body">
+      <div className="admin-body d-flex">
         <AdminSidebar />
 
         {/* Main Panel */}

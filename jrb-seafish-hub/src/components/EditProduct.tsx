@@ -70,20 +70,38 @@ const EditProduct = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
+  
     if (!token) {
       setError("Authorization token missing!");
       return;
     }
-
+  
+    if (!name || !category || !price) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+  
     try {
+      // Fetch existing products
+      const existing = await axios.get(`${import.meta.env.VITE_API_URL}/products`);
+      const isDuplicate = existing.data.some(
+        (product: any) =>
+          product._id !== id &&
+          product.name.toLowerCase().trim() === name.toLowerCase().trim()
+      );
+  
+      if (isDuplicate) {
+        setError("Product with this name already exists.");
+        return;
+      }
+  
       const formData = new FormData();
       formData.append("name", name);
       formData.append("price", price.toString());
       formData.append("category", category);
-      formData.append("stockStatus", stockStatus.toString()); // Convert boolean to string
+      formData.append("stockStatus", stockStatus.toString());
       if (image) formData.append("image", image);
-
+  
       await axios.put(
         `${import.meta.env.VITE_API_URL}/products/${id}`,
         formData,
@@ -94,12 +112,19 @@ const EditProduct = () => {
           },
         }
       );
-
+  
       navigate("/admin/products");
-    } catch (err) {
-      setError("Error updating product. Please try again.");
+    } catch (err: any) {
+      if (axios.isAxiosError(err)) {
+        const msg =
+          err.response?.data?.message || "Error updating product. Please try again.";
+        setError(msg);
+      } else {
+        setError("Error updating product. Please try again.");
+      }
     }
   };
+  
 
   return (
     <div className="admin-container">

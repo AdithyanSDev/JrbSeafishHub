@@ -48,33 +48,47 @@ const EditCategory = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+  
+    if (!name) {
+      setError("Category name is required.");
+      return;
+    }
+  
     if (!token) {
       setError("Authorization token missing!");
       return;
     }
   
     try {
+      // Fetch all categories to check for duplicates (excluding the current category)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/categories`);
+      const isDuplicate = response.data.some(
+        (category: any) =>
+          category.name.toLowerCase().trim() === name.toLowerCase().trim() && category._id !== id
+      );
+  
+      if (isDuplicate) {
+        setError("Another category with this name already exists.");
+        return;
+      }
+  
       const formData = new FormData();
       formData.append("name", name);
-      if (image) formData.append("image", image); // Append new image if uploaded
+      if (image) formData.append("image", image);
   
-      // Get token from local storage or Redux
-      const token = localStorage.getItem("token"); 
-      console.log(token)
-    
       await axios.put(`${import.meta.env.VITE_API_URL}/categories/${id}`, formData, {
-        headers: { 
+        headers: {
           "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${token}` // Include Bearer token
+          "Authorization": `Bearer ${token}`,
         },
       });
   
-      navigate("/admin/categories"); // Redirect after successful update
+      navigate("/admin/categories");
     } catch (err) {
       setError("Error updating category. Please try again.");
     }
   };
+  
   
 
   return (

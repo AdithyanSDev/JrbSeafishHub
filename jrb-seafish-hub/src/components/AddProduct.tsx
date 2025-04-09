@@ -35,29 +35,46 @@ const AddProduct = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
+  
+    if (!name || !category || !price || !image) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+  
     try {
+      // Check if product with the same name exists
+      const existing = await axios.get(`${import.meta.env.VITE_API_URL}/products`);
+      const isDuplicate = existing.data.some(
+        (product: any) => product.name.toLowerCase().trim() === name.toLowerCase().trim()
+      );
+  
+      if (isDuplicate) {
+        setError("Product with this name already exists.");
+        return;
+      }
+  
       const formData = new FormData();
       formData.append("name", name);
       if (image) formData.append("image", image);
       formData.append("category", category);
       formData.append("price", price.toString());
       formData.append("stockStatus", stockStatus.toString());
-console.log(formData)
+  
       await axios.post(`${import.meta.env.VITE_API_URL}/products`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+  
       navigate("/admin/products");
     } catch (err) {
       setError("Error adding product. Please try again.");
     }
   };
+  
 
   return (
     <div className="admin-container">
       <AdminNavbar />
-      <div className="admin-body">
+      <div className="admin-body d-flex">
         <AdminSidebar />
         <div className="main-panel">
           <div className="content-wrapper">

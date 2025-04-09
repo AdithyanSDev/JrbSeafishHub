@@ -10,7 +10,7 @@ const Features: React.FC = () => {
     { 
       icon: "fas fa-shipping-fast", 
       title: "Fast Home Delivery", 
-      desc: "Get your order delivered to your doorstep quickly and efficiently." 
+      desc: "Fast doorstep delivery within 30km of the shop." 
     },
     { 
       icon: "fas fa-cut", 

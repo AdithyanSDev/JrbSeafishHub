@@ -13,6 +13,13 @@ export const createCategory = async (req: Request, res: Response): Promise<void>
       return;
     }
 
+    // 👉 Check for duplicate category name (case insensitive)
+    const existing = await Category.findOne({ name: { $regex: new RegExp(`^${name}$`, "i") } });
+    if (existing) {
+      res.status(409).json({ message: "Category with this name already exists" });
+      return;
+    }
+
     const newCategory = new Category({ name, image });
     await newCategory.save();
 
@@ -21,6 +28,7 @@ export const createCategory = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const getCategories = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -51,22 +59,27 @@ export const updateCategory = async (req: Request, res: Response): Promise<void>
   try {
     const { id } = req.params;
     const { name } = req.body;
-    let image = req.file?.path; // Get uploaded file path
+    let image = req.file?.path;
 
-    // Fetch the existing category
     const existingCategory = await Category.findById(id);
     if (!existingCategory) {
       res.status(404).json({ message: "Category not found" });
       return;
     }
 
-    // Update name
-    existingCategory.name = name;
-    
-    // If a new image is uploaded, update it
-    if (image) {
-      existingCategory.image = image;
+    // 👉 Check for duplicate category name, excluding current category
+    const duplicate = await Category.findOne({ 
+      name: { $regex: new RegExp(`^${name}$`, "i") }, 
+      _id: { $ne: id }
+    });
+
+    if (duplicate) {
+      res.status(409).json({ message: "Category with this name already exists" });
+      return;
     }
+
+    existingCategory.name = name;
+    if (image) existingCategory.image = image;
 
     await existingCategory.save();
     res.json({ message: "Category updated successfully", category: existingCategory });
@@ -74,6 +87,7 @@ export const updateCategory = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: "Error updating category" });
   }
 };
+
 
 export const deleteCategory = async (req: Request, res: Response): Promise<void> => {
   try {
