@@ -9,10 +9,10 @@ const AdminDashboard = () => {
       <AdminNavbar />
 
       {/* Sidebar and Main Content Wrapper */}
-      <div className="admin-body">
-        <AdminSidebar />
+      <div className="admin-body d-flex">
+  <AdminSidebar />
 
-        <div className="main-panel">
+  <div className="main-panel">
           <div className="content-wrapper">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h3 className="page-title">Admin Dashboard</h3>

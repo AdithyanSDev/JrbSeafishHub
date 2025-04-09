@@ -1,43 +1,50 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import "../assets/styles/admin.css";
-import { useDispatch } from "react-redux";
-import { logout } from "../redux/authSlice";
+import  { useState } from 'react';
+import { Offcanvas, Button, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import '../assets/styles/admin.css';
 
 const AdminSidebar = () => {
-  const location = useLocation(); // Get current path
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logout());  // Clear Redux auth state
-
-    // Redirect to home page if there's no token
-    navigate("/");
-  };
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
-    <nav className="admin-sidebar">
-      <div className="sidebar-collapse">
-        <ul className="nav-menu">
-          <li className={location.pathname === "/admin/products" ? "active" : ""}>
-            <Link to="/admin/products">
-              <i className="fa fa-table"></i> Manage Products
-            </Link>
-          </li>
-          <li className={location.pathname === "/admin/categories" ? "active" : ""}>
-            <Link to="/admin/categories">
-              <i className="fa fa-edit"></i> Manage Categories
-            </Link>
-          </li>
-        </ul>
-      </div>
+    <>
+      {/* Toggle Button for Mobile */}
+      <Button variant="primary" onClick={handleShow} className="d-lg-none m-2">
+        <i className="fas fa-bars"></i>
+      </Button>
 
-      {/* Logout Button */}
-      <div className="logout-section">
-        <button className="btn btn-danger logout-btn" onClick={handleLogout}>
-          <i className="fa fa-sign-out"></i> Logout
-        </button>
+      {/* Mobile Offcanvas Sidebar */}
+      <Offcanvas show={show} onHide={handleClose} responsive="lg" className="d-lg-none">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Admin Panel</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body className="d-flex flex-column justify-between h-100">
+          <Nav className="flex-column flex-grow-1">
+            <Nav.Link as={Link} to="/admin/products">📦 Manage Products</Nav.Link>
+            <Nav.Link as={Link} to="/admin/categories">📁 Manage Categories</Nav.Link>
+          </Nav>
+          <div className="logout-btn-wrapper">
+            <Button variant="danger" className="w-100">Logout</Button>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      {/* Static Sidebar for Large Screens */}
+      <div className="admin-sidebar d-none d-lg-flex flex-column justify-between">
+        <div>
+          <h5 className="text-center p-3">Admin Panel</h5>
+          <Nav className="flex-column px-3">
+            <Nav.Link as={Link} to="/admin/products">📦 Manage Products</Nav.Link>
+            <Nav.Link as={Link} to="/admin/categories">📁 Manage Categories</Nav.Link>
+          </Nav>
+        </div>
+        <div className="logout-btn-wrapper p-3">
+          <Button variant="danger" className="w-100">Logout</Button>
+        </div>
       </div>
-    </nav>
+    </>
   );
 };
 

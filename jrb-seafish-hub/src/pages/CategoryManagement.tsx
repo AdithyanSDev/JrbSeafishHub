@@ -59,10 +59,10 @@ console.log(categories)
   return (
     <div className="admin-container">
       <AdminNavbar />
-      <div className="admin-body">
-        <AdminSidebar />
+      <div className="admin-body d-flex">
+  <AdminSidebar />
 
-        <div className="main-panel">
+  <div className="main-panel">
           <div className="content-wrapper">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h3 className="page-title">Category Management</h3>

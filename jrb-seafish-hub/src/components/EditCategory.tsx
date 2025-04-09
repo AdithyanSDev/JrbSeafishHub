@@ -80,7 +80,7 @@ const EditCategory = () => {
     {/* Admin Navbar */}
     <AdminNavbar />
 
-    <div className="admin-body">
+    <div className="admin-body d-flex">
         <AdminSidebar />
 
         {/* Main Panel */}

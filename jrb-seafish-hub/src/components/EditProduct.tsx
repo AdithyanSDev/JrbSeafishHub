@@ -104,7 +104,7 @@ const EditProduct = () => {
   return (
     <div className="admin-container">
       <AdminNavbar />
-      <div className="admin-body">
+      <div className="admin-body d-flex">
         <AdminSidebar />
         <div className="main-panel">
           <div className="content-wrapper">
@@ -159,22 +159,19 @@ const EditProduct = () => {
 
                 </div>
 
-                {typeof stockStatus === "boolean" && (
-  <div className="mb-3">
-    <label className="form-label">Stock Status</label>
-    <select
-      className="form-control"
-      value={stockStatus.toString()}
-      onChange={(e) =>
-        setStockStatus(e.target.value === "true")
-      }
-      required
-    >
-      <option value="true">In Stock</option>
-      <option value="false">Out of Stock</option>
-    </select>
-  </div>
-)}
+                <div className="mb-3">
+  <label className="form-label">Stock Status</label>
+  <select
+    className="form-control"
+    value={stockStatus?.toString() || "false"}
+    onChange={(e) => setStockStatus(e.target.value === "true")}
+    required
+  >
+    <option value="true">In Stock</option>
+    <option value="false">Out of Stock</option>
+  </select>
+</div>
+
 
 
                 <div className="mb-3">

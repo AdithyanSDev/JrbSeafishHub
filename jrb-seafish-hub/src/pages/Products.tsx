@@ -15,6 +15,7 @@ interface Product {
   image: string;
   price: number;
   category: ProductCategory;
+  stockStatus: boolean; 
 }
 
 
@@ -126,28 +127,41 @@ console.log(products)
               </h1>
               <div className="row g-4">
                 {filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
-                    <div key={product._id} className="col-md-6 col-lg-4">
-                      <div className="card border border-secondary shadow-sm position-relative">
-                        <div 
-                          className="position-absolute top-0 end-0 bg-secondary text-white px-2 py-1 rounded-bottom-start"
-                          style={{ fontSize: "14px", fontWeight: "bold" }}
-                        >
-                          500g
-                        </div>
-                        <img
-                           src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${product.image}`}
-                          className="card-img-top"
-                          alt={product.name}
-                          style={{ height: "200px", objectFit: "cover" }}
-                        />
-                        <div className="card-body text-center">
-                          <h5 className="card-title">{product.name}</h5>
-                          <h3 className="text-primary fw-bold">₹{product.price}</h3>
-                        </div>
+               filteredProducts.map((product) => (
+                <div key={product._id} className="col-md-6 col-lg-4">
+                  <div 
+                    className={`card border border-secondary shadow-sm position-relative ${!product.stockStatus ? "opacity-50" : ""}`}
+                    style={{ pointerEvents: product.stockStatus ? "auto" : "none" }}
+                  >
+                    {/* Optional overlay for out-of-stock */}
+                    {!product.stockStatus && (
+                      <div className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 text-white px-3 py-2 rounded">
+                        Out of Stock
                       </div>
+                    )}
+              
+                    <div 
+                      className="position-absolute top-0 end-0 bg-secondary text-white px-2 py-1 rounded-bottom-start"
+                      style={{ fontSize: "14px", fontWeight: "bold" }}
+                    >
+                      500g
                     </div>
-                  ))
+              
+                    <img
+                      src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${product.image}`}
+                      className="card-img-top"
+                      alt={product.name}
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+              
+                    <div className="card-body text-center">
+                      <h5 className="card-title">{product.name}</h5>
+                      <h3 className="text-primary fw-bold">₹{product.price}</h3>
+                    </div>
+                  </div>
+                </div>
+              ))
+              
                 ) : (
                   <p className="text-center text-muted">No products available</p>
                 )}

@@ -1,7 +1,7 @@
   import { useState, useEffect } from "react";
   import { Link } from "react-router-dom";
   import axios from "axios";
-
+  import Swal from 'sweetalert2';
   import "../assets/styles/admin.css";
   import AdminNavbar from "../components/AdminNavbar";
   import AdminSidebar from "../components/AdminSidebar";
@@ -46,28 +46,46 @@ interface Category {
       fetchProducts();
     }, [token]);
   
+    
+
     const handleDelete = async (id: string) => {
-      const confirmDelete = window.confirm("Are you sure you want to delete this product?");
-      if (!confirmDelete) return;
-  
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+      });
+    
+      if (!result.isConfirmed) return;
+    
       if (!token) {
-        alert("Unauthorized - No token found");
+        Swal.fire('Unauthorized', 'No token found', 'error');
         return;
       }
-  
+    
       try {
         await axios.delete(`${import.meta.env.VITE_API_URL}/products/${id}`, {
           headers: {
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
         });
-        alert("Product deleted successfully");
+    
         setProducts(products.filter((product) => product._id !== id));
+    
+        Swal.fire(
+          'Deleted!',
+          'Product has been deleted.',
+          'success'
+        );
       } catch (error) {
         console.error("Error deleting product:", error);
-        alert("Failed to delete the product");
+        Swal.fire('Error', 'Failed to delete the product', 'error');
       }
     };
+    
   
   
 
@@ -77,7 +95,7 @@ interface Category {
         <AdminNavbar />
 
         {/* Sidebar and Main Content Wrapper */}
-        <div className="admin-body">
+        <div className="admin-body d-flex">
           <AdminSidebar />
           
           <div className="main-panel">
@@ -111,26 +129,34 @@ interface Category {
                               </tr>
                             </thead>
                             <tbody>
-    {products.map((product, index) => (
-      <tr key={index}>
-        <td>{product.name}</td>
-        <td>{product.category?.name || "Unknown"}</td>
-        <td>₹{product.price.toFixed(2)}</td>
-        <td>{product.stockStatus}</td>
-        <td>
-        <Link to={`/admin/edit-product/${product._id}`} className="btn btn-sm btn-info">
-    Edit
-  </Link>
+                            {products.map((product, index) => (
+  <tr key={index}>
+    <td>{product.name}</td>
+    <td>{product.category?.name || "Unknown"}</td>
+    <td>₹{product.price.toFixed(2)}</td>
+    
+    <td>
+      {product.stockStatus ? (
+        <span className="badge bg-success">In Stock</span>
+      ) : (
+        <span className="badge bg-danger">Out of Stock</span>
+      )}
+    </td>
 
-  <button 
-                                    className="btn btn-sm btn-danger ms-2" 
-                                    onClick={() => handleDelete(product._id)}
-                                  >
-                                    Delete
-                                  </button>
-        </td>
-      </tr>
-    ))}
+    <td>
+      <Link to={`/admin/edit-product/${product._id}`} className="btn btn-sm btn-info">
+        Edit
+      </Link>
+      <button 
+        className="btn btn-sm btn-danger ms-2" 
+        onClick={() => handleDelete(product._id)}
+      >
+        Delete
+      </button>
+    </td>
+  </tr>
+))}
+
   </tbody>
 
 
