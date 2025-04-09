@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 
 import "../assets/styles/admin.css";
@@ -39,23 +40,34 @@ console.log(categories)
       setLoading(false);
     }
   };
-
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this category?"))
-      return;
-
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/categories/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setCategories(categories.filter((category) => category._id !== id));
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      setError("Failed to delete category.");
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This category will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${import.meta.env.VITE_API_URL}/categories/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        setCategories(categories.filter((category) => category._id !== id));
+  
+        Swal.fire("Deleted!", "Category has been deleted.", "success");
+      } catch (error) {
+        console.error("Error deleting category:", error);
+        setError("Failed to delete category.");
+        Swal.fire("Error", "Failed to delete category.", "error");
+      }
     }
   };
-
+  
   return (
     <div className="admin-container">
       <AdminNavbar />

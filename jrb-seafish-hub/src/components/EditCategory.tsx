@@ -30,7 +30,9 @@ const EditCategory = () => {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/categories/${id}`);
         const category: Category = response.data;
         setName(category.name);
+        console.log("Image from category:", category.image)
         setExistingImage(category.image);
+        console.log(setExistingImage(category.image))
       } catch (error) {
         console.error("Error fetching category:", error);
         setError("Failed to load category.");
@@ -58,7 +60,7 @@ const EditCategory = () => {
       if (image) formData.append("image", image); // Append new image if uploaded
   
       // Get token from local storage or Redux
-      const token = localStorage.getItem("token"); // Adjust if using Redux
+      const token = localStorage.getItem("token"); 
       console.log(token)
     
       await axios.put(`${import.meta.env.VITE_API_URL}/categories/${id}`, formData, {
@@ -112,16 +114,17 @@ const EditCategory = () => {
                 {/* Display Existing Image */}
                 <div className="mb-3">
                   <label className="form-label">Current Image</label>
-                  {existingImage && (
-                    <div>
-                      <img
-                        src={`${import.meta.env.VITE_API_URL}/${existingImage}`}
-                        alt="Category"
-                        className="category-img"
-                        style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "5px" }}
-                      />
-                    </div>
-                  )}
+                  {existingImage ? (
+  <img
+    src={`${import.meta.env.VITE_API_URL.replace("/api", "")}/${existingImage}`}
+    alt={`Current image for ${name}`}
+    className="category-img"
+    style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "5px" }}
+  />
+) : (
+  <p className="text-muted">No image available for this category.</p>
+)}
+
                 </div>
 
                 <div className="mb-3">

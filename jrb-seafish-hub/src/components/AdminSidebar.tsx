@@ -1,12 +1,22 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { Offcanvas, Button, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/authSlice'; 
 import '../assets/styles/admin.css';
 
 const AdminSidebar = () => {
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleLogout = () => {
+    dispatch(logout());     
+    navigate("/");         
+  };
 
   return (
     <>
@@ -26,7 +36,9 @@ const AdminSidebar = () => {
             <Nav.Link as={Link} to="/admin/categories">📁 Manage Categories</Nav.Link>
           </Nav>
           <div className="logout-btn-wrapper">
-            <Button variant="danger" className="w-100">Logout</Button>
+            <Button variant="danger" className="w-100" onClick={handleLogout}>
+              Logout
+            </Button>
           </div>
         </Offcanvas.Body>
       </Offcanvas>
@@ -41,7 +53,9 @@ const AdminSidebar = () => {
           </Nav>
         </div>
         <div className="logout-btn-wrapper p-3">
-          <Button variant="danger" className="w-100">Logout</Button>
+          <Button variant="danger" className="w-100" onClick={handleLogout}>
+            Logout
+          </Button>
         </div>
       </div>
     </>
